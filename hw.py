@@ -112,23 +112,30 @@ def legendre_my(n_values):
 
 n_values = [0,1,2,3,4,5,6,7,8]
 legendre_polynomials, legendre_derivatives = legendre_my(n_values)
-print(legendre_polynomials)
+# print(legendre_polynomials)
 # print(legendre_derivatives)
 
 x = np.linspace(-1, 1, 100)
 plt.figure(figsize=(10, 6))
 
-#storing the values of P0,P1,P2.
+#storing the values of P0,P1,P2 and P'0,P'1,P'2
 p0_values = legendre_polynomials[0]
 p1_values = legendre_polynomials[1]
 p2_values = legendre_polynomials[2]
+p3_values = legendre_polynomials[3]
+p4_values = legendre_polynomials[4]
 
-data = np.column_stack((x, p0_values, p1_values, p2_values))
-np.savetxt('leg00.dat', data, header='x P0(x) P1(x) P2(x)')
-# np.savetxt('leg00.dat', data, header='x P0(x) P1(x) P2(x)', fmt='%12.6f')
+pd0_values = legendre_derivatives[0]
+pd1_values = legendre_derivatives[1]
+pd2_values = legendre_derivatives[2]
 
-for n, legendre_poly in zip(n_values, legendre_polynomials):
-    plt.plot(x, legendre_poly, label=f'n={n}')
+
+data_p_values = np.column_stack((x, p0_values, p1_values, p2_values))
+np.savetxt('leg00.dat', data_p_values, header='x P0(x) P1(x) P2(x)')
+# np.savetxt('leg00.dat', data_p_values, header='x P0(x) P1(x) P2(x)', fmt='%12.8f') #using fmt for formatting
+
+data_pd_values = np.column_stack((x, pd0_values, pd1_values, pd2_values))
+np.savetxt('leg01.dat', data_pd_values, header='x Pd0(x) Pd1(x) Pd2(x)')
 
 
 # #Using inbuilt fuction to calculate legendre polynomials using scipy
@@ -145,11 +152,63 @@ print("Values from both methods match:", comparison)
 
 # Read the contents of the file
 with open('leg00.dat', 'r') as file:
-    file_contents = file.read()
+    file_contents_1 = file.read()
+with open('leg01.dat', 'r') as file:
+    file_contents_2 = file.read()
 
 # Print the contents to the console
-print(file_contents)
+print(file_contents_1)
+print(file_contents_2)
 
+
+#Prove the recursion relation for Legendre polynomial : 
+
+
+#retrieving all the required values used in all three recursion relations
+pd1x = np.loadtxt('leg01.dat',skiprows =1, usecols = 2)
+pd2x = np.loadtxt('leg01.dat', skiprows=1, usecols=3)
+p1x = np.loadtxt('leg00.dat',skiprows = 1, usecols = 2)
+p2x = np.loadtxt('leg00.dat',skiprows = 1, usecols = 3)
+
+# (1) nPn(x) = xP′n(x) − P′n−1(x) for n=2
+
+n = 2
+n_hundred = np.tile(n,len(x))
+lhs1 = n*p2_values 
+rhs1 = x*pd2x - pd1x
+compare_recursion1 = np.allclose(lhs1,rhs1)
+print("The recursion relation for Legendre polynomial: nPn(x) = xP′n(x) − P′n−1(x) is ",compare_recursion1)
+
+#storing the values in leg02.dat file
+data_recursion1 = np.column_stack((x, n_hundred, n_hundred-1, pd2x, pd2x, pd1x))
+np.savetxt('leg02.dat', data_recursion1, header='x  n  (n - 1)   P2(x)   Pd2(x)   Pd1(x)', fmt='%12.6f')
+
+
+#(2) (2n +1)xPn(x) = (n+1)Pn+1 +nPn−1(x) for n =2
+lhs2 = (2*n +1)*x*p2x
+rhs2 = (n+1)*p3_values + n*p1x
+compare_recursion2 = np.allclose(lhs2,rhs2)
+print("The recursion relation for Legendre polynomial: (2n +1)xPn(x) = (n+1)Pn+1 +nPn−1(x) is ",compare_recursion2)
+
+#storing the values in leg03.dat file  x, n, (n − 1), (n + 1), Pn(x), Pn−1(x) and Pn+1(x)
+data_recursion2 = np.column_stack((x, n_hundred, n_hundred-1, n_hundred+1, p2x, p3_values))
+np.savetxt('leg03.dat', data_recursion2, header='x   n   n-1   n+1   p2x   p3_values', fmt='%12.6f')
+
+#(3) nPn(x) = (2n−1)xPn−1(x)−(n−1)Pn−2(x) for n=3
+n=3
+n_hundred = np.tile(n,len(x))
+lhs3 = n*p3_values
+rhs3 = (2*n-1)*x*p2x - (n-1)*p1x
+compare_recursion3 = np.allclose(lhs3,rhs3)
+print("The recursion relation for Legendre polynomial: nPn(x) = (2n−1)xPn−1(x)−(n−1)Pn−2(x) is ",compare_recursion3)
+
+#storing the values in leg03.dat file   x, n, (n − 1), (n + 1), Pn(x), Pn−1(x) and Pn+1(x)
+data_recursion3 = np.column_stack((x, n_hundred, n_hundred-1, n_hundred+1, p3_values, p4_values))
+np.savetxt('leg04.dat', data_recursion3, header='x   n   n-1   n+1   p2x   p3_values', fmt='%12.6f')
+
+#plotting the legendre polynomial for n values.
+for n, legendre_poly in zip(n_values, legendre_polynomials):
+    plt.plot(x, legendre_poly, label=f'n={n}')
 plt.title("Legendre Polynomials")
 plt.xlabel("x")
 plt.ylabel("P_n(x)")
