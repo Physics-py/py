@@ -105,9 +105,7 @@ def legendre_my(n_values):
         legendre_derivative = np.zeros_like(x)
         for i in range(m + 1):
             legendre_polynomial += ((((-1) ** i) * fact(2 * n - 2 * i))/((2**n)*fact(n - i) *fact(n - 2 * i) * fact(i))) * (x **(n - 2 * i))
-            # Here, you need to fix the derivative calculation
             legendre_derivative += ((((-1) ** i) * fact(2 * n - 2 * i))/((2**n)*fact(n - i)*fact(n-2*i)*fact(i))) * (n - 2 * i) * (x ** (n - 2 * i - 1))
-            # legendre_derivative += ((((-1) ** i) * fact(2 * n - 2 * i))/((2**n)*fact(n - i) *fact(n - 2 * i) * fact(i)))*(n-2*i)*(x**(n-2*i -1))
         legendre_polynomials.append(legendre_polynomial)
         legendre_derivatives.append(legendre_derivative)
     return legendre_polynomials, legendre_derivatives
@@ -117,25 +115,21 @@ legendre_polynomials, legendre_derivatives = legendre_my(n_values)
 print(legendre_polynomials)
 # print(legendre_derivatives)
 
+x = np.linspace(-1, 1, 100)
+plt.figure(figsize=(10, 6))
+
 #storing the values of P0,P1,P2.
 p0_values = legendre_polynomials[0]
 p1_values = legendre_polynomials[1]
 p2_values = legendre_polynomials[2]
 
-
-
-x = np.linspace(-1, 1, 100)
-plt.figure(figsize=(10, 6))
+data = np.column_stack((x, p0_values, p1_values, p2_values))
+np.savetxt('leg00.dat', data, header='x P0(x) P1(x) P2(x)')
+# np.savetxt('leg00.dat', data, header='x P0(x) P1(x) P2(x)', fmt='%12.6f')
 
 for n, legendre_poly in zip(n_values, legendre_polynomials):
     plt.plot(x, legendre_poly, label=f'n={n}')
 
-plt.title("Legendre Polynomials")
-plt.xlabel("x")
-plt.ylabel("P_n(x)")
-plt.legend()
-plt.grid(True)
-plt.show()
 
 # #Using inbuilt fuction to calculate legendre polynomials using scipy
 
@@ -143,6 +137,22 @@ def compute_legendre_values(a,x):
     legendre_inbuilt = legendre(a)
     return legendre_inbuilt(x)
 legendre_computed = [compute_legendre_values(a,x) for a in n_values]
+
 #comparing inbuilt and custom legendre fuction values
+
 comparison = np.allclose(legendre_computed, legendre_polynomials)
 print("Values from both methods match:", comparison)
+
+# Read the contents of the file
+with open('leg00.dat', 'r') as file:
+    file_contents = file.read()
+
+# Print the contents to the console
+print(file_contents)
+
+plt.title("Legendre Polynomials")
+plt.xlabel("x")
+plt.ylabel("P_n(x)")
+plt.legend()
+plt.grid(True)
+plt.show()
