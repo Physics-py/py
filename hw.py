@@ -1,4 +1,39 @@
 ###############################################--Sem2_MP2_L01--###############################################
+#The current I and the voltage V bears the relation IR = V .
+#Estimate the value of R and error ∆R, from an experiment that produced the following
+#data for voltage vs current.
+
+# import numpy as np
+# # Given data
+# voltage = np.array([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0])  # Voltage (V)
+# current = np.array([0.0, 0.8, 1.5, 2.1, 2.6, 3.0, 3.3, 3.6, 3.9, 4.0])   # Current (mA)
+
+# # Convert current from milliamperes (mA) to amperes (A)
+# current_A = current / 1000.0  # Convert milliamperes to amperes
+
+# # Calculate the means
+# mean_v = np.mean(voltage)
+# mean_i = np.mean(current_A)
+
+# # Calculate the deviations from the mean
+# delta_v = voltage - mean_v
+# delta_i = current_A - mean_i
+
+# # Calculate the slope (resistance) using the least squares method
+# slope = np.sum(delta_v * delta_i) / np.sum(delta_i**2)
+
+# # Calculate the intercept (not needed for resistance calculation)
+# intercept = mean_v - slope * mean_i
+
+# # Calculate the error in the slope (resistance) using the least squares method
+# delta_R = np.sqrt(np.sum((delta_v - slope * delta_i)**2) / (len(voltage) - 2)) / np.sqrt(np.sum(delta_i**2))
+
+# # Resistance (R) is the slope of the line (V/I)
+# R = slope
+
+# # Print the results
+# print("Estimated Resistance (R):", R, "ohms")
+# print("Error in Resistance (ΔR):", delta_R, "ohms")
 
 # #Python code to perform least square fitting for equations of the forms y = bx+a,y = ax^b and y = ae^(bx).
 # import numpy as np 
@@ -240,71 +275,71 @@
 # plt.grid(True)
 # plt.show()
 ###############################################--Sem2_MP2_L04--###############################################
-# import matplotlib.pyplot as plt
-# import numpy as np
-# from scipy.interpolate import lagrange
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.interpolate import lagrange
 
-# xi = [0.00, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
-# yi = [1.0, 0.99, 0.96, 0.91, 0.85, 0.76, 0.67, 0.57, 0.46, 0.34, 0.22, 0.11, 0.00, -0.10, -0.18, -0.26]
-# # xi = [2.81, 3.24, 3.80 ,4.30, 4.37, 5.29, 6.03]
-# # yi = [0.5,1.2, 2.1, 2.9, 3.6, 4.5, 5.7]
+xi = [0.00, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
+yi = [1.0, 0.99, 0.96, 0.91, 0.85, 0.76, 0.67, 0.57, 0.46, 0.34, 0.22, 0.11, 0.00, -0.10, -0.18, -0.26]
+# xi = [2.81, 3.24, 3.80 ,4.30, 4.37, 5.29, 6.03]
+# yi = [0.5,1.2, 2.1, 2.9, 3.6, 4.5, 5.7]
 
-# n = len(xi)
+n = len(xi)
 
-# def lagrange_basis(x_values, x, j):
-#     result = 1
-#     for i in range(n):
-#         if i != j:
-#             result *= (x - x_values[i]) / (x_values[j] - x_values[i])
-#     return result 
+def lagrange_basis(x_values, x, j):
+    result = 1
+    for i in range(n):
+        if i != j:
+            result *= (x - x_values[i]) / (x_values[j] - x_values[i])
+    return result 
 
-# def lagrange_interpolation(x_values, y_values, x):
-#     result = 0
-#     for j in range(n):
-#         result += y_values[j] * lagrange_basis(x_values, x, j)
-#     return result
+def lagrange_interpolation(x_values, y_values, x):
+    result = 0
+    for j in range(n):
+        result += y_values[j] * lagrange_basis(x_values, x, j)
+    return result
 
-# def lagrange_inverse_interpolation(x_values, y_values, y):
-#     return lagrange_interpolation(y_values, x_values, y)  
+def lagrange_inverse_interpolation(x_values, y_values, y):
+    return lagrange_interpolation(y_values, x_values, y)  
 
-# # Find out the value of the Bessel function at β = 2.3.
-# # Also find out the value of β for which the Bessel function J0(β) = 0.5
+# Find out the value of the Bessel function at β = 2.3.
+# Also find out the value of β for which the Bessel function J0(β) = 0.5
 
-# x = 2.3
-# print("the value of the Bessel function at β = 2.3 is interpolated value at x=2.3:", lagrange_interpolation(xi, yi, x))
+x = 2.3
+print("the value of the Bessel function at β = 2.3 is interpolated value at x=2.3:", lagrange_interpolation(xi, yi, x))
 
-# y = 0.5
-# print("β for which the Bessel function J0(β) = 0.5 is interpolated value at y=0.5:", lagrange_inverse_interpolation(xi, yi, y))
+y = 0.5
+print("β for which the Bessel function J0(β) = 0.5 is interpolated value at y=0.5:", lagrange_inverse_interpolation(xi, yi, y))
 
-# # Find out the value of incident laser intensity if the detected photodetector voltage is 2.4
-# # y = 2.4
-# # print("the value of incident laser intensity if the detected photodetector voltage is 2.4 is interpolated value at y=2.4:", lagrange_inverse_interpolation(xi, yi, y) )
+# Find out the value of incident laser intensity if the detected photodetector voltage is 2.4
+# y = 2.4
+# print("the value of incident laser intensity if the detected photodetector voltage is 2.4 is interpolated value at y=2.4:", lagrange_inverse_interpolation(xi, yi, y) )
 
-# # Perform inbuilt Lagrange interpolation
-# lagrange_poly = lagrange(xi, yi)
+# Perform inbuilt Lagrange interpolation
+lagrange_poly = lagrange(xi, yi)
 
-# x_value = 1.6
-# interpolated_value = lagrange_poly(x_value)
-# print("Interpolated value at x={}: {}".format(x_value, interpolated_value))
+x_value = 1.6
+interpolated_value = lagrange_poly(x_value)
+print("Interpolated value at x={}: {}".format(x_value, interpolated_value))
 
-# # Generate points for plotting the curve
-# x_range = np.linspace(min(xi), max(xi), 1000)
-# y_range_custom = [lagrange_interpolation(xi, yi, x) for x in x_range]
-# y_range_inbuilt = lagrange_poly(x_range)
+# Generate points for plotting the curve
+x_range = np.linspace(min(xi), max(xi), 1000)
+y_range_custom = [lagrange_interpolation(xi, yi, x) for x in x_range]
+y_range_inbuilt = lagrange_poly(x_range)
 
-# # Plotting the data points and the interpolation curve
-# plt.scatter(xi, yi, color='blue', label='Data Points')
-# plt.plot(x_range, y_range_custom, color='red', label='Custom Lagrange Interpolation')
-# plt.plot(x_range, y_range_inbuilt, color='green', label='Inbuilt Lagrange Interpolation')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.title('Comparison of Lagrange Interpolation')
-# plt.legend()
-# plt.grid(True)
-# plt.show()
+# Plotting the data points and the interpolation curve
+plt.scatter(xi, yi, color='blue', label='Data Points')
+plt.plot(x_range, y_range_custom, color='red', label='Custom Lagrange Interpolation')
+plt.plot(x_range, y_range_inbuilt, color='green', label='Inbuilt Lagrange Interpolation')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Comparison of Lagrange Interpolation')
+plt.legend()
+plt.grid(True)
+plt.show()
 
 # print('''----------------------------------------------------
-# What did you learn 
+# What did you learn ?
 # ----------------------------------------------------
 # Interpolation is a method to estimate values between known data points. Lagrange interpolation uses polynomials that pass through each data point exactly, allowing for accurate approximation of values within the data range. Through exploring interpolation techniques like Lagrange interpolation, I've learned how to effectively estimate unknown values based on available data, which is crucial in various fields such as mathematics, engineering, and data analysis.''')
 
