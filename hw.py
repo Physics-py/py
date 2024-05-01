@@ -351,7 +351,73 @@ plt.show()
 # # print("These codes are written by Ram(2023PHY1034)")
 # # print("---------------------------------------")
 
+'''
+def runge_kutta_classical(f, a, b, x0, N):
 
+    import numpy as np
 
+    h = (b - a) / (N + 1)
+    t_values = np.linspace(a, b, N + 2)
+    x_values = np.zeros(N + 2)
+    x_values[0] = x0
+
+    for i in range(1, N + 2):
+        k1 = h * f(t_values[i - 1], x_values[i - 1])
+        k2 = h * f(t_values[i - 1] + h, x_values[i - 1] + k1)
+        x_values[i] = x_values[i - 1] + 0.5 * (k1 + k2)
+
+    return t_values, x_values
+
+# Example usage:
+def f(t, x):
+    return x ** 2 - t
+
+a = 0
+b = 1
+x0 = 0.5
+N = 100
+
+t_values, x_values = runge_kutta_classical(f, a, b, x0, N)
+
+# Print the results
+for t, x in zip(t_values, x_values):
+    print(f"t = {t:.4f}, x = {x:.4f}")
+'''
+'''
+import numpy as np
+import matplotlib.pyplot as plt
+
+def euler_method(f, a, b, x0, N):
+
+    h = (b - a) / (N + 1)
+    t_values = np.linspace(a, b, N + 2)
+    x_values = np.zeros(N + 2)
+    x_values[0] = x0
+
+    for i in range(1, N + 2):
+        x_values[i] = x_values[i - 1] + h * f(t_values[i - 1], x_values[i - 1])
+
+    return t_values, x_values
+
+# Example usage:
+def f(t, x):
+    return x ** 2 - t
+
+a = 0
+b = 1
+x0 = 0.5
+N = 100
+
+t_values, x_values = euler_method(f, a, b, x0, N)
+
+# Plotting the results
+plt.plot(t_values, x_values, label='Euler Method Approximation', color='blue')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.title('Approximation of ODE Solution using Euler\'s Method')
+plt.legend()
+plt.grid(True)
+plt.show()
+'''
 
 
