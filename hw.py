@@ -347,43 +347,8 @@ plt.show()
 # ----------------------------------------------------
 # Interpolation is a method to estimate values between known data points. Lagrange interpolation uses polynomials that pass through each data point exactly, allowing for accurate approximation of values within the data range. Through exploring interpolation techniques like Lagrange interpolation, I've learned how to effectively estimate unknown values based on available data, which is crucial in various fields such as mathematics, engineering, and data analysis.''')
 
-# # print("---------------------------------------")
-# # print("These codes are written by Ram(2023PHY1034)")
-# # print("---------------------------------------")
+#Euler Method
 
-'''
-def runge_kutta_classical(f, a, b, x0, N):
-
-    import numpy as np
-
-    h = (b - a) / (N + 1)
-    t_values = np.linspace(a, b, N + 2)
-    x_values = np.zeros(N + 2)
-    x_values[0] = x0
-
-    for i in range(1, N + 2):
-        k1 = h * f(t_values[i - 1], x_values[i - 1])
-        k2 = h * f(t_values[i - 1] + h, x_values[i - 1] + k1)
-        x_values[i] = x_values[i - 1] + 0.5 * (k1 + k2)
-
-    return t_values, x_values
-
-# Example usage:
-def f(t, x):
-    return x ** 2 - t
-
-a = 0
-b = 1
-x0 = 0.5
-N = 100
-
-t_values, x_values = runge_kutta_classical(f, a, b, x0, N)
-
-# Print the results
-for t, x in zip(t_values, x_values):
-    print(f"t = {t:.4f}, x = {x:.4f}")
-'''
-'''
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -418,6 +383,88 @@ plt.title('Approximation of ODE Solution using Euler\'s Method')
 plt.legend()
 plt.grid(True)
 plt.show()
+
 '''
-'''https://chat.openai.com/share/2c75f67a-305d-4e49-8f9a-9f754588643b'''
+def runge_kutta_classical(f, a, b, x0, N):
+
+    import numpy as np
+
+    h = (b - a) / (N + 1)
+    t_values = np.linspace(a, b, N + 2)
+    x_values = np.zeros(N + 2)
+    x_values[0] = x0
+
+    for i in range(1, N + 2):
+        k1 = h * f(t_values[i - 1], x_values[i - 1])
+        k2 = h * f(t_values[i - 1] + h, x_values[i - 1] + k1)
+        x_values[i] = x_values[i - 1] + 0.5 * (k1 + k2)
+
+    return t_values, x_values
+
+# Example usage:
+def f(t, x):
+    return x ** 2 - t
+
+a = 0
+b = 1
+x0 = 0.5
+N = 100
+
+t_values, x_values = runge_kutta_classical(f, a, b, x0, N)
+
+# Print the results
+for t, x in zip(t_values, x_values):
+    print(f"t = {t:.4f}, x = {x:.4f}")
+'''
+
+'''
+import numpy as np
+import matplotlib.pyplot as plt
+
+def runge_kutta_classical(f, a, b, N0, N):
+    h = (b - a) / N
+    t_values = np.linspace(a, b, N + 1)
+    N_values = np.zeros(N + 1)
+    N_values[0] = N0
+
+    for i in range(1, N + 1):
+        k1 = h * f(t_values[i - 1], N_values[i - 1])
+        k2 = h * f(t_values[i - 1] + h, N_values[i - 1] + k1)
+        N_values[i] = N_values[i - 1] + 0.5 * (k1 + k2)
+
+    return t_values, N_values
+
+# Define the decay function f(t, N)
+def f(t, N):
+    return -N / tau
+
+# Given initial conditions
+N0 = 20000  # Initial population
+t_half = 4  # Half-life in years
+
+# Calculate decay constant lambda and decay time constant tau
+lambda_ = np.log(2) / t_half
+tau = 1 / lambda_
+
+# Define the time interval
+a = 0  # Initial time
+b = 10 * t_half  # Final time, let's go beyond 4 half-lives
+
+# Number of steps
+N = 100
+
+# Solve the ODE using RK2
+t_values, N_values = runge_kutta_classical(f, a, b, N0, N)
+
+# Plotting the results
+plt.figure(figsize=(10, 6))
+plt.plot(t_values, N_values, label='Population', color='blue')
+plt.xlabel('Time (years)')
+plt.ylabel('Population')
+plt.title('Radioactive Decay')
+plt.legend()
+plt.grid(True)
+plt.show()
+'''
+
 
