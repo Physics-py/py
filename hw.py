@@ -419,5 +419,5 @@ plt.legend()
 plt.grid(True)
 plt.show()
 '''
-
+'''https://chat.openai.com/share/2c75f67a-305d-4e49-8f9a-9f754588643b'''
 
